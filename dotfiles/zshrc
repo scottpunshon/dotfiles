@@ -1,0 +1,78 @@
+# .zshrc
+
+# Add our custom Zsh functions directory to Zsh's $fpath
+fpath=( "$HOME/.zsh/functions" $fpath )
+
+#
+# Plugins
+#
+# Command completions
+autoload -U compinit
+compinit
+# Enable using Bash style completion definitions
+autoload -U bashcompinit
+bashcompinit
+# Stop delete word (Ctrl-W) (Zsh: backward-kill-word) on directory delimiter
+autoload -U select-word-style
+select-word-style bash
+
+#
+# Prompt
+#
+autoload -U promptinit; promptinit
+prompt pure  # choose 'pure' prompt
+
+#
+# Options
+#
+setopt ZLE
+setopt IGNORE_EOF
+# 10 sec wait if you do something that will delete everything
+setopt RM_STAR_WAIT
+# Append instead of overwrite history
+setopt APPEND_HISTORY
+# Share history between multiple shells
+setopt SHARE_HISTORY
+# Running same command twice in succession only saves the last one
+setopt HIST_IGNORE_DUPS
+# ...even if there are commands inbetween commands that are the same, still only save the last one
+setopt HIST_IGNORE_ALL_DUPS
+# If a line starts with a space, don't save it.
+setopt HIST_IGNORE_SPACE
+setopt HIST_NO_STORE
+# Remove superfluous blanks from each command line being added to the history 
+setopt HIST_REDUCE_BLANKS
+# Save the time and how long a command ran
+setopt EXTENDED_HISTORY
+# Additional
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+
+#
+# Key Bindings
+#
+# bind Ctrl-P and Ctrl-N for EMACS mode
+bindkey -M emacs '^P' history-search-backward  #history-substring-search-up
+bindkey -M emacs '^N' history-search-forward  #history-substring-search-down
+
+#
+# Case insensitive completion
+#
+# Allows for partial completion before ., _ or -, e.g. f.b -> foo.bar
+#zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# Tries first to complete the current word exactly as its written, before
+# trying case-insensitive or other matches.
+# Allows for completing on the left side of the written text, e.g. bar -> foobar
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+
+#
+# Load shell agnostic components
+#
+for rcfile in aliases functions ; do
+	if [ -r ~/.${rcfile} ]; then
+		. ~/.${rcfile}
+	fi
+done
+

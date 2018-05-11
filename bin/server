@@ -1,0 +1,33 @@
+#!/bin/bash
+
+port="${1:-8000}"
+ip="0.0.0.0"    # ip="localhost"
+
+open_browser() {
+	open_cmd='open'
+	[ "$(uname -a)" = "Linux" ] && open_cmd='xdg-open'
+
+	# Open the address (after a short delay to give the server a chance to startup)
+	(
+	sleep 2
+	"${open_cmd}" "$@"
+	) &
+}
+
+response='n'
+echo "Open browser? [yN]"
+read response
+case "$response" in
+	[yY] | [yY][Ee][Ss] )
+		open_browser "http://${ip}:${port}/"
+		;;
+	*)
+		;;
+esac
+
+command -v php > /dev/null && SERVERCMD="php -S "${ip}:${port}"" || SERVERCMD="python -m SimpleHTTPServer"
+SERVERCMD="python -m SimpleHTTPServer"
+#python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port" ;
+
+${SERVERCMD} 2>/dev/null
+

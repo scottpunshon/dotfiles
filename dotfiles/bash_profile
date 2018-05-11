@@ -1,0 +1,7 @@
+# .bash_profile
+
+# macOS's Bash only sources .bashrc for a login shell, and instead sources .bash_profile for all new terminals.
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+

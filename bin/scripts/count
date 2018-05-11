@@ -1,0 +1,4 @@
+#!/bin/sh
+# count - count different lines
+
+sort "$@" | uniq -c | sort -n

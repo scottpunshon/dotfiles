@@ -1,0 +1,26 @@
+# vim:ft=sh
+
+#
+# mkcd - Make a new directory (if needed) and change into it
+#
+mkcd() {
+	mkdir -p "$@" && cd "$@"
+}
+
+#
+# g - Git shortcut
+#
+unalias g >/dev/null 2>&1  # IMPORTANT: ensure `g` isnt aliased otherwise will cause error defining function
+
+g() {
+	if [ "$#" -gt 0 ]; then
+		git "$@"
+	else
+		git status --short --branch
+	fi
+}
+# Completion: complete `g` like `git`
+if command -v compdef &>/dev/null; then
+	compdef g='git'
+fi
+

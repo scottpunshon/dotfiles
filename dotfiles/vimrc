@@ -1,0 +1,384 @@
+set nocompatible
+
+set background=dark
+"silent! colorscheme desert
+
+highlight LineNr ctermfg=darkgray guifg=darkgrey
+highlight Comment gui=italic
+
+syntax match myTodo /\(TODO\|NOTE\|FIXME\|XXX\|WARNING\):\?/ containedin=Comment
+
+syntax on
+filetype plugin indent on
+
+
+""""""""""""
+" Settings "
+""""""""""""
+set number
+set modeline
+set modelines=5
+
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set shiftround  " use multiple of shiftwidth when indenting with '<' and '>'
+set noexpandtab
+set smarttab
+set autoindent
+set smartindent
+
+set hlsearch incsearch
+set ignorecase smartcase
+
+set formatoptions-=t " Don't autowrap text
+set formatoptions+=c " Do autowrap comments
+set formatoptions+=r " Automatically continue comments
+set formatoptions-=o " Don't automatically continue comments when hitting 'o' or 'O'
+set formatoptions+=q " Allow formatting of comments with 'gq'
+set formatoptions+=n " Recognize numbered lists
+set formatoptions+=l " Don't break long lines that were already there
+set formatoptions+=1 " Don't break a line after a one-letter word.  It's broken before it instead (if possible).
+if v:version > 703 || has('patch-7.3.541')
+	set formatoptions+=j  " Delete comment character when joining commented lines
+endif
+
+set nrformats-=octal  " make <C-a> and <C-x> play well with zero-padded numbers (i.e. don't consider them octal or hex)
+
+set showmode
+set nostartofline	" Don't jump to start of line when scrolling
+set showtabline=2
+set switchbuf=useopen,usetab,newtab
+set showmatch
+
+set scrolloff=3
+set sidescrolloff=3
+set splitbelow splitright
+set diffopt+=vertical	" Always use vertical diffs
+set tags=./tags;$HOME " walk directory tree upto $HOME looking for tags
+
+set directory=/var/tmp,/tmp,~/.vim/tmp
+set noswapfile
+set backupdir=/var/tmp,/tmp,~/.vim/tmp
+set nobackup writebackup
+set undodir=/var/tmp,/tmp,~/.vim/tmp
+"set noundofile
+set undolevels=1000
+set undoreload=10000  "maximum number lines to save for undo on a buffer reload
+"silent! call mkdir('/tmp/vim-undo', 'p')
+
+set whichwrap=b,s
+set whichwrap+=<,>,[,]
+
+set keymodel=startsel,stopsel
+"set selectmode=mouse,key
+"
+set listchars=tab:»\ ,trail:·,nbsp:·  ",eol:¬
+set listchars+=tab:┊\ ,nbsp:·  ",eol:¬
+set list
+if has('patch-7.4.338')
+	let &showbreak = '↳ '
+	"let &showbreak = '↪ '
+	set breakindent
+	set breakindentopt= ""sbr
+endif
+set linebreak
+
+" Yanks go on clipboard instead.
+if has('clipboard')
+	"set clipboard+=unnamed
+	set clipboard=unnamed
+endif
+if has('unnamedplus')
+	set clipboard+=unnamedplus
+endif
+
+set mouse=a
+set mousehide  " Hide mouse after chars typed
+
+" The alt (option) key on macs now behaves like the 'meta' key. This means we
+" can now use <m-x> or similar as maps. This is buffer local, and it can easily
+" be turned off when necessary (for instance, when we want to input special
+" characters) with :set nomacmeta.
+if has('gui_macvim')
+	set macmeta
+endif
+set esckeys		" Allow cursor keys in insert mode
+set ttyfast		" Optimize for fast terminal connections
+set lazyredraw	" Don't redraw while executing macros (good performance config)
+
+
+""""""""""""""""
+" Key Mappings "
+""""""""""""""""
+let mapleader=','
+let maplocalleader="\<leader>"
+
+" Press 'jk' quickly to exit back to Normal mode
+inoremap jk <Esc>
+cnoremap jk <C-c>
+" Navigate up/down within the same line if the line wraps
+nnoremap j gj
+nnoremap k gk
+
+" Tab navigation
+noremap <C-Tab> :tabnext<CR>
+noremap <C-S-Tab> :tabprevious<CR>
+nnoremap <silent> <leader>[ :tabprev<CR>
+nnoremap <silent> <leader>] :tabnext<CR>
+" Window navigation. NOTE: This is needed for vim-tmux navigation interaction
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" next/prev buffer
+map gb :bnext<CR>
+map gB :bprev<CR>
+" switch to last used buffer
+noremap <leader>p <C-^>
+noremap <C-Space> <C-^>
+
+" get rid of reminant highlighting from previous search
+nnoremap <silent> <leader>/ :nohlsearch<CR>
+" make Ctrl+L to clear the highlight as well as redraw
+nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+inoremap <silent> <C-L> <C-O>:<C-U>nohlsearch<CR><C-L>
+" Temporarily turn off search highlighting while in insert mode
+autocmd InsertEnter * :setlocal nohlsearch
+autocmd InsertLeave * :setlocal hlsearch
+
+" Allow deleting selection (with x or X) without updating the clipboard (yank buffer)
+nnoremap x "_x
+nnoremap X "_X
+vnoremap x "_x
+vnoremap X "_X
+
+" Open command mode `:` by pressing `;;` twice in rapid succession
+" NOTE: don't map `;` by itself, as `;` is used to move to the next match after a f/F or t/T motion
+"nmap ;; :
+"nnoremap ; ;
+
+" Now we don't have to move our fingers so far when we want to scroll through
+" the command history; also, don't forget the q: command (see :h q: for more " info)
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
+" Some Emacs bindings for the command window ...sorry :(
+cnoremap <C-a>		<Home>
+cnoremap <C-e>		<End>
+
+" Insert word under cursor while in Search and/or Command mode
+cnoremap <C-Space> <C-r><C-w>
+
+" Keep search matches in the middle of the window.
+" zz centers the screen on the cursor, zv unfolds any fold if the cursor suddenly appears inside a fold.
+nnoremap * *zzzv
+nnoremap # #zzzv
+"nnoremap n nzzzv
+"nnoremap N Nzzzv
+
+" Select most recent paste with gV (i.e. gV=)
+nmap gV `[v`]
+
+nnoremap <leader>q :quit<CR>
+nnoremap <leader>Q :confirm qa<CR>
+nnoremap <leader>w :w!<CR>
+" :W sudo saves the file (useful for handling the permission-denied error)
+command! W w !sudo tee % > /dev/null
+
+" Reselect after indenting a selection
+xnoremap > >gv
+xnoremap < <gv
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<CR>:pwd<CR>
+
+" Remap Vim 0 to first non-blank character
+map 0 ^
+
+" Make `Y` work from the cursor to the end of line (which is more consistand
+" with C and D)
+nnoremap Y y$
+
+" These create newlines like o and O but stay in normal mode
+nnoremap <silent> zj m'o<Esc>``
+nnoremap <silent> zk m'O<Esc>``
+
+" qq - record, Q - replay
+nnoremap Q @q
+
+" Delete from cursor back to preceeding newline, while in Insert mode
+" inoremap <C-D> <C-G>u<C-U>
+inoremap <C-BS> <C-G>u<C-U>
+inoremap <C-Del> <C-O>D
+
+" Open all current buffers as new tabs
+"map <leader>obt :bufdo tab split<CR>
+
+" Search and replace word under cursor (,*)
+"nnoremap <leader>* :%s/\<<C-r><C-w>\>//<Left>
+"vnoremap <leader>* "hy:%s/\V<C-r>h//<left>
+
+"nmap <silent> <leader>- :bd<CR>
+
+" Re-run last command
+nnoremap <leader>l :<C-u><C-p><CR>
+nnoremap <leader>; :<C-u><Up>
+
+" Duplicate a selection
+vmap D y'>p
+
+" Paste without moving the cursor
+nmap gP P`[
+nmap gp p`[
+
+" No Help, please
+map <F1> <Esc>
+
+" Maps autocomplete to tab
+"inoremap <expr> <Tab>  pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab>  pumvisible() ? "\<C-p>" : "\<Tab>"
+
+" Press ^F from insert mode to insert the current file name
+imap <C-F> <C-R>=expand("%")<CR>
+
+set pastetoggle=<F7>
+
+nnoremap <silent> <C-M-j> :m .+1<CR>==
+nnoremap <silent> <C-M-k> :m .-2<CR>==
+xnoremap <silent> <C-M-j> :m '>+1<CR>gv=gv
+xnoremap <silent> <C-M-k> :m '<-2<CR>gv=gv
+inoremap <silent> <C-M-j> <Esc>:m .+1<CR>==gi
+inoremap <silent> <C-M-k> <Esc>:m .-2<CR>==gi
+if has('mac') || has('macunix')
+	" NOTE: use of capital non-modifier key (i.e. J/K) is important if wanting
+	" to include <Shift> modifier key.
+	" (e.g. replacing <Ctrl> with <Cmd>, the mapping <C-S-j> would become <D-J>)
+	nnoremap <silent> <D-J> :m .+1<CR>==
+	nnoremap <silent> <D-K> :m .-2<CR>==
+	xnoremap <silent> <D-J> :m '>+1<CR>gv=gv
+	xnoremap <silent> <D-K> :m '<-2<CR>gv=gv
+	inoremap <silent> <D-J> <Esc>:m .+1<CR>==gi
+	inoremap <silent> <D-K> <Esc>:m .-2<CR>==gi
+else
+	" NOTE: doesn't seem to work - <Shift> modifier doesn't seem to get passed to Vim (both in terminal & gvim)
+	" if not on a Mac or computer with a <Cmd> key, then use <Shift> in the alternate mappings.
+	"nnoremap <silent> <C-S-j> :m .+1<CR>==
+	"nnoremap <silent> <C-S-k> :m .-2<CR>==
+	"xnoremap <silent> <C-S-j> :m '>+1<CR>gv=gv
+	"xnoremap <silent> <C-S-k> :m '<-2<CR>gv=gv
+	"inoremap <silent> <C-S-j> <Esc>:m .+1<CR>==gi
+	"inoremap <silent> <C-S-k> <Esc>:m .-2<CR>==gi
+endif
+
+" Shortcut to pretty format JSON file
+nnoremap <F5> :%!python -m json.tool<CR>
+
+
+""""""""""""""""""""""""""
+" Commands and Functions "
+""""""""""""""""""""""""""
+" Undo everything since last write:  :+X+!
+command! UndoToLastWrite +X+!
+
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+		  \ | wincmd p | diffthis
+endif
+
+
+" return the syntax highlight group under the cursor ''
+function! CurrentHighlight()
+	let name = synIDattr(synID(line('.'),col('.'),1),'name')
+	if name == ''
+		return ''
+	else
+		return '[' . name . ']'
+	endif
+endfunction
+
+
+" Auto-chmod script files to set their permissions to be executable
+augroup autochmod
+	autocmd!
+	autocmd BufWritePost * call NoExtNewFile()
+augroup END
+
+function! NoExtNewFile()
+	if getline(1) =~ "^#!.*/bin/"
+		if &filetype == ""
+			filetype detect
+		endif
+		silent !chmod a+x <afile>
+	endif
+endfunction
+
+
+" Jump to last cursor position when opening a file. Dont do it when writing a commit log entry
+autocmd BufReadPost * call <SID>SetCursorPosition()
+
+function! s:SetCursorPosition()
+	if &filetype !~ 'svn\|commit\c'
+		if line("'\"") > 0 && line("'\"") <= line("$")
+			exe "normal! g`\""
+			normal! zz
+		endif
+	end
+endfunction
+
+
+" spell check when writing commit logs
+autocmd filetype svn,*commit* setlocal spell
+
+
+" Abbreviations for inserting current Date and DateTime strings
+function! Itime(fmt)
+	execute "normal a" . strftime(a:fmt)
+endfunction
+
+iabbrev I_DATE <ESC>:call Itime("%F")<CR>a
+iabbrev I_DATETIME <ESC>:call Itime("%F %T")<CR>a
+
+
+" Make the quickfix window wrap no matter the setting of nowrap
+autocmd BufWinEnter * if &buftype == 'quickfix' | setl wrap | endif
+" 'q' inside quickfix window closes it (like nerdtree, bufexplorer, etc)
+autocmd BufWinEnter * if &buftype == 'quickfix' | map q :cclose<CR> | endif
+autocmd BufWinEnter * if &buftype == 'help' | nnoremap q :quit<CR> | endif
+
+
+"""""""""""""""""""
+" Plugin Settings "
+"""""""""""""""""""
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_cpp_compiler_options = ' -std=c++0x'
+
+" NetRW
+" Hit enter in the file browser to open the selected file with :vsplit to the right of the browser.
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_liststyle=3
+"let g:netrw_http_cmd='curl -Ls -o'
+"let g:netrw_http_xcmd='-source >'
+
+" NERDTree
+let g:NERDTreeMouseMode = 2
+let NERDTreeWinSize=30
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$', '\.rbc$', '\~$' ]
+"close vim if the only window left open is a NERDTree
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
+let NERDTreeHighlightCursorline=1
+nnoremap <silent> <leader>n :NERDTreeToggle<CR>
+nnoremap <silent> <leader>N :NERDTreeFind<CR>
+nmap <F8> :NERDTreeToggle<CR>
+
+" TagBar
+let tagbar_width=30
+nnoremap <silent> <leader>m :TagbarToggle<CR>
+nmap <F9> :TagbarToggle<CR>
+
+

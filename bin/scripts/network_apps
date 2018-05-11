@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# You will likely need to run this with administrator priviledges
+lsof |grep TCP | grep --color=never ESTAB

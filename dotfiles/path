@@ -1,0 +1,6 @@
+# vim:ft=sh
+
+# User's bin directory as first priority
+PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
+
+export PATH

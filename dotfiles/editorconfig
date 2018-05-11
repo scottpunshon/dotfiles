@@ -1,0 +1,87 @@
+# EditorConfig - Cross Editor/IDE Settings (http://editorconfig.org)
+# vim:ft=ini ft=dosini
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = tab
+indent_size = 4
+insert_final_newline = false
+trim_trailing_whitespace = true
+# Give operators breathing room, but not brackets
+spaces_around_operators = true
+spaces_around_brackets = false
+quote_type = single
+
+# HTML-specific settings
+[*.{html,htm,phtml,tpl,twig}]
+quote_type = double
+indent_size = 2
+
+# CSS/Styling scripts
+[*.{css,scss,sass,less,stylus}]
+indent_size = 2
+
+# Markdown
+[*.{md,markdown,mdown}]
+trim_trailing_whitespace = false
+indent_size = 2
+max_line_length = 100
+
+# JSON
+[*.json]
+indent_size = 2
+indent_style = space
+
+# JavaScript
+[*.js]
+curly_bracket_next_line = false
+indent_style = tab
+quote_type = single
+# JSX extended
+[*.jsx]
+indent_size = 2
+# Indentation override for all JS under lib directory
+[{node_modules,bower_components,vendor}/**.js]
+indent_style = space
+indent_size = 2
+
+# YAML
+[*.{yml,yaml}]
+indent_size = 2
+indent_style = space
+
+# SQL
+[*.sql]
+charset = utf-8
+
+# Make
+[{Makefile,*.makefile,*.mak}]
+indent_style = tab
+trim_trailing_whitespace = false
+
+# Vim
+[{*.vim,.vimrc,vimrc}]
+trim_trailing_whitespace = false
+
+# Python
+[*.py]
+indent_style = tab
+
+# Templating languages
+[*.jade]
+trim_trailing_whitespace = false
+indent_size = 4
+[*.{ejs,hbs}]
+indent_size = 2
+
+# INI configuration files
+[*.ini,.editorconfig,.flowconfig,*.desktop]
+indent_size = 2
+indent_style = space
+
+# JSON configuration files
+[.bower*,.jscsrc,.jshint*,.babelrc]
+indent_size = 2
+

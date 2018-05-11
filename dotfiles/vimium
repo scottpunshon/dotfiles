@@ -1,0 +1,75 @@
+# Insert your preferred key mappings here.
+# Refer to wiki documentation: https://github.com/philc/vimium/wiki/Key-Mappings
+
+# This approximates a closeWindow command.
+#map x removeTab count=9999
+map x removeTab count=1
+
+# This approximates LinkHints.activateModeWithQueue.
+#map <a-f> LinkHints.activateModeToOpenInNewTab count=9999
+map <a-f> LinkHints.activateModeToOpenInNewTab count=10
+map <m-f> LinkHints.activateModeToOpenInNewTab count=10
+
+# Download many links.
+map <a-d> LinkHints.activateModeToDownloadLink count=10
+map <m-d> LinkHints.activateModeToDownloadLink count=10
+
+
+map <c-s> enterFindMode
+map <c-x>o nextTab
+map <c-x>0 removeTab
+
+map <a-<> scrollToTop
+map <a->> scrollToBottom
+map <m-<> scrollToTop
+map <m->> scrollToBottom
+
+map <c-w> copyCurrentUrl
+map <a-w> copyCurrentUrl
+map yy copyCurrentUrl
+
+map yf LinkHints.activateModeToCopyLinkUrl
+
+# Insert your preferred key mappings here.
+map <c-u> scrollPageUp
+map <c-d> scrollPageDown
+map u scrollPageUp
+map d scrollPageDown
+map <c-j> previousTab
+map <c-k> nextTab
+map J prevTab
+map K nextTab
+map <c-l> goForward
+map <c-h> goBack
+map L goForward
+map H goBack
+
+# With such a mapping (and with smooth scrolling), d-and-hold gives a faster scroll than j-and-hold.
+map d scrollDown count=5
+
+# Now, <c-]><Escape> passes the <Escape> key to the web page itself, so site specific handlers can recieve it
+map <c-]> passNextKey
+
+# Custom search engines (with builtin support for auto-completion)
+g: https://www.google.com/search?q=%s Google
+gi: https://www.google.com/search?tbm=isch&q=%s Google Images
+gm: https://www.google.com/maps?q=%s Google Maps
+# Find your way from your home to places using Google Maps
+home: https://www.google.com/maps/dir/13+Tabalum+Road+Balgowlah+Heights/%s
+translate: http://translate.google.com/?source=osdd#auto|auto|%s Google Translator
+recent: https://www.google.com/search?hl=en&tbo=1&tbs=qdr:y&q=%s Google (last year only)
+# Use google to search the current site you're on
+site: javascript:location='http://www.google.com/search?num=100&q=site:'%20+%20escape(location.hostname)%20+%20'%20%S'%20;%20void%200
+yt: http://www.youtube.com/results?search_query=%s YouTube
+wiki: http://en.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
+gh: https://github.com/search?q=%s GitHub
+hn: https://www.hnsearch.com/search#request/submissions&q=%s&start=0 HackerNews
+so: http://stackoverflow.com/search?q=%s StackOverflow
+su: http://superuser.com/search?q=%s SuperUser
+
+map s Vomnibar.activate keyword=g
+map w Vomnibar.activateInNewTab keyword=w
+map M Vomnibar.activateInNewTab keyword=gm
+
+map : Vomnibar.activate
+

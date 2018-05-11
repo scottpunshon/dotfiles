@@ -1,0 +1,16 @@
+#!/bin/bash
+
+REMOTE="${1:-user@machine}"
+KEY="${2:-$HOME/.ssh/id_rsa.pub}"
+
+if [ "$#" -lt 1 ]; then
+	echo "
+Usage:
+	$(basename $0) user@machine [publickey-file]
+"
+	exit 0
+fi
+
+echo "Copying $KEY to authorized keys on $REMOTE ..."
+
+cat "$KEY" | ssh "$REMOTE" "mkdir ~/.ssh 2>/dev/null; cat >> ~/.ssh/authorized_keys"

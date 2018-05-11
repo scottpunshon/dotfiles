@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if ! which synclient &>/dev/null; then
+	echo "missing required packages: synclient"
+	exit 1
+fi
+
+
+get_setting_value() {
+
+	if which synclient &>/dev/null; then
+		local TouchpadOff="$(synclient -l | grep TouchpadOff | sed -e 's/^.*=\s\+//g')"
+
+		echo $TouchpadOff
+		return 0
+	else
+		return 1
+	fi
+}
+
+
+inital_value="$(get_setting_value)"
+
+if [ "${inital_value}" -ne 0 ]; then
+	synclient TouchpadOff=0
+	echo "Touchpad enabled"
+else
+	synclient TouchpadOff=1
+	echo "Touchpad disabled"
+fi
+
+if [ "$(get_setting_value)" -eq "${inital_value}" ] || [ "${inital_value}" -gt 1 ]; then
+	echo "
+ERROR: setting changes may not persist properly
+This sometimes occurs if the touchpad has also been set to \"disable while typing\" in the system settings. Turning this feature off in your system settings may fix this issue." >/dev/stderr
+	exit 1
+fi
+exit 0

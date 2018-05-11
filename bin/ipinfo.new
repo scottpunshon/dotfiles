@@ -1,0 +1,8 @@
+#!/bin/sh
+
+public_ip() {
+	dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+
+public_ip

@@ -1,0 +1,20 @@
+# vim: ft=sh
+
+_PROMPT_USER='\033[92m\u\033[0m'  # bright green
+_PROMPT_HOST='\h'
+_PROMPT_PWD='\033[94m\w\033[0m'   # bright blue
+
+# Show host information when connected from remote machine
+if [ -n "${SSH_TTY}" ]; then
+	PS1="
+${_PROMPT_USER}@${_PROMPT_HOST} ${_PROMPT_PWD}
+\$ "
+else
+	PS1="
+${_PROMPT_USER} ${_PROMPT_PWD}
+\$ "
+fi
+
+unset _PROMPT_USER _PROMPT_HOST _PROMPT_PWD
+
+export PS1

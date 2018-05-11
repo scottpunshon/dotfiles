@@ -1,0 +1,113 @@
+#!/bin/sh
+##################
+# Determines the total size (on disk) of a file(s) or directorie(s).
+#
+# The total disk usage of each file or directory is output along its relative
+# filesystem path.
+#
+# The output list is sorted by each item's calculated total size.
+#
+
+#########
+# NOTES:
+#
+# - Recurse entire directory tree using the `du -a` flag
+#
+# - One-line Equivalents: Unix (i.e. not assuming support of GNU `sort -h` flag):
+#	```
+#		for i in *; do du -ah | grep $i\$ | sort -nr -k 1; done | head -n 11
+#	```
+#	(or if GNU sort is available, then the following is an alternative: `du -hsx * | sort -rh | head -10`)
+#
+
+du_cmd="du"
+du_flags="-sxH" # "-xHs -c"
+#command -v gdu &>/dev/null && du_cmd='gdu'
+
+sort_cmd="sort"
+sort_flags="-bf"
+command -v gsort &>/dev/null && sort_cmd='gsort'
+
+# Can we sort human-readable sizes?
+if ${sort_cmd} -h /dev/null 1>/dev/null 2>&1; then
+	du_flags="$du_flags -h"      # output human-readable sizes (i.e. automatic B|K|M|G suffixes)
+	sort_flags="$sort_flags -h"  # sort by human-readable sizes (i.e. B|K|M|G suffixes)
+else
+	du_flags="-k $du_flags"      # all sizes in KB (i.e. block counts in 1-KiB blocks)
+	sort_flags="$sort_flags -n"  # sort by numeric values
+fi
+
+
+# Show help/usage information
+usage() {
+	echo "Usage:"
+	echo "	$(basename $0) [rst] [path]"
+	echo ""
+	echo "If 'path' is not specified, defaults to all the contents of the current directory."
+	echo ""
+	echo "	-r      reverse sort order"
+	echo "	-t, -s  include a total"
+	echo ""
+	echo "Author: Scott K Punshon, 2016"
+}
+
+
+#args=`getopt rst $*`; errcode=$?;  # you should not use `getopt abo: "$@"` since that would parse the arguments differently from what `set -- $args` then does (which is set the positional parameters to $args).
+#set -- $args
+
+## You cannot use the set command with a backquoted getopt directly,
+## since the exit code from getopt would be shadowed by those of set,
+## which is zero by definition.
+#for i; do
+#    case "$i" in
+#        -r)
+#            sort_flags="$sort_flags -r"
+#            sflags="${i#-}$sflags";
+#            shift ;;
+#        -s|-t)
+#            du_flags="$du_flags -c"
+#            sflags="${i#-}$sflags";
+#            shift ;;
+#        --help|-h)
+#            usage
+#            exit 1 ;;
+#        -o)
+#            echo oarg is "'"$2"'"; oarg="$2"; shift;
+#            shift;;
+#        --)
+#            shift; break;;
+#    esac
+#done
+
+
+# Process arguments
+OPTIONS_DESCRIPTOR="rstv:h"
+
+while getopts ":${OPTIONS_DESCRIPTOR}" opt; do
+	case "${opt}" in
+		r)
+			sort_flags="$sort_flags -r" ;;
+		s|t)
+			du_flags="$du_flags -c" ;;
+		v)
+			echo "value of -v =${OPTARG}"
+			;;
+		h)
+			usage
+			exit 0 ;;
+		*)
+			echo "Invalid flag: $OPTARG $opt"
+			usage
+			exit 1 ;;
+	esac
+done
+shift $((OPTIND-1))
+
+
+# Perform operations
+if [ $# -ge 1 ] ; then
+	command ${du_cmd} ${du_flags} "$@" | command ${sort_cmd} ${sort_flags}
+else
+	command ${du_cmd} ${du_flags} * | command ${sort_cmd} ${sort_flags}
+fi
+

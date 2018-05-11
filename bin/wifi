@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+
+DEFAULT_WIFI_IFACE="wlan0"
+if [ "$(uname -s)" = "Darwin" ]; then
+	DEFAULT_WIFI_IFACE="en0"
+fi
+
+
+_usage() {
+	#echo -e "
+	cat <<HELP
+Get WiFi SSID
+
+Usage: $(basename "$0")
+
+If an SSID is specified and it is the current WiFi network's SSID, echo it,
+otherwise echo nothing.
+
+Copyright (c) 2016 Scott Punshon
+Licensed under the MIT license.
+HELP
+	return 0
+}
+
+
+WIFI_IFACE="$DEFAULT_WIFI_IFACE"
+
+_check_interface() {
+	local ifaces="$(ifconfig -l)"
+
+	echo "$ifaces" | grep "\<${WIFI_IFACE}\>"
+	if [ $? -ne 0 ]; then
+		echo "Interface $WIFI_IFACE doesn't exist"
+		exit 1
+	fi
+}
+
+
+SSID=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I | grep "\<SSID\>" | sed "s/.*: //")
+
+
+
+nwsetup='networksetup'
+airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
+
+
+_info() {
+	if [ "$(uname -s)" = "Darwin" ]; then
+		${airport} -I
+	else
+		:
+	fi
+}
+
+_scan() {
+	if [ "$(uname -s)" = "Darwin" ]; then
+		${airport} --scan
+	else
+		:
+	fi
+}
+
+_up() {
+	${nwsetup} -setairportpower "$WIFI_IFACE" on
+}
+
+_down() {
+	${nwsetup} -setairportpower "$WIFI_IFACE" off
+}
+
+_ssid() {
+	if [ "$(uname -s)" = "Darwin" ]; then
+		_info | grep "\<SSID\>" | sed 's/.*: //'
+	else
+		:
+	fi
+}
+
+_bssid() {
+	if [ "$(uname -s)" = "Darwin" ]; then
+		_info | grep "\<BSSID\>" | sed 's/.*: //'
+	else
+		:
+	fi
+}
+
+
+action="${1:-info}"
+
+case "${action}" in
+	--help)
+		_usage
+		exit 0
+		;;
+	on|up|start)
+		${nwsetup} -setairportpower "$WIFI_IFACE" on
+		;;
+	off|down|stop)
+		${nwsetup} -setairportpower "$WIFI_IFACE" off
+		;;
+	scan|-s|list|-l|stations)
+		_scan
+		;;
+	status|info|list)
+		_info
+		;;
+	ssid|SSID)
+		_ssid
+		;;
+	bssid|BSSID)
+		_bssid
+		;;
+	*)
+		echo '--help for help'
+		;;
+esac
+
+exit $?
+

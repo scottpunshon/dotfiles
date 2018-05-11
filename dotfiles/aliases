@@ -1,0 +1,38 @@
+# vim:ft=sh
+
+alias cdprev='cd -'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+
+#
+# ls
+#
+ls_flags='-p -H'
+if ls --color >/dev/null 2>&1; then
+	# GNU version of `ls`
+	ls_colourflag='--color=auto'
+else
+	# BSD version of `ls`
+	ls_colourflag='-G'
+fi
+
+alias ls="ls ${ls_flags} ${ls_colourflag}"
+
+alias l='ls'
+alias la='ls -A'
+alias ll='ls -lh'
+alias l1='ls -1'
+
+unset ls_flags ls_colourflag
+
+#
+# Checksums
+# macOS doesn't provide 'md5sum' or 'sha1sum', so use fallbacks
+command -v md5sum  >/dev/null || alias md5sum="md5 -r"
+command -v sha1sum >/dev/null || alias sha1sum="shasum"
+
+# Canonical hex dump; some systems have this symlinked
+command -v hd >/dev/null || alias hd="hexdump -C"
+

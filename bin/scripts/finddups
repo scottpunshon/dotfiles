@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+#NAME
+#  finddups - Search directories for duplicate files with different names
+#
+#SYNOPSIS
+#  finddups [dir]..
+#
+#REQUIRES
+#
+#DESCRIPTION
+#
+#OPTIONS
+#
+#EXAMPLES
+#
+#FILES
+#
+#BUGS
+#
+#SEE ALSO
+#
+#AUTHOR
+#  John Chambers <jc@trillian.mit.edu>
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+
+$| = 1;
+$exitstat = 0;
+($P = $0) =~ s".*/"";
+$V = $ENV{"V_$P"} || $ENV{"D_$P"} || 2;	# Verbose level.
+
+%dirs = ();		# Directories to search
+
+for $a (@ARGV) {
+	if (-d $a) {
+		++$dirs{$a};
+	} else {
+		print STDERR "$P: No directory \"$a\"\n" if $V>0;
+	}
+}
+%dirs = ('.') unless %dirs;	# Default to current directory
+
+for $d (sort keys %dirs) {
+	print "===== $d\n" if $V>1;
+	@files = glob("$d/*");
+	%inodes = ();		#
+	for $f (@files) {
+		print "files: $f\n" if $V>1;
+		$f =~ s/^\.\/+//;
+		($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size) = stat($f);
+		if (defined($inodes{$ino})) {
+			$inodes{$ino} .= "\0$f";
+		} else {
+			$inodes{$ino} = $f;
+		}
+	}
+	for $i (sort keys %inodes) {
+		print "inodes: $i\n" if $V>1;
+		$ifiles = $inodes{$i};
+		@files = sort(split("\0",$ifiles));
+		if ($#files > 0) {
+			for $f (@files) {
+				printf("%8d $f\n",$i);
+			}
+			print "\n";
+		}
+	}
+}
+
+print "$P: Exit with status $exitstat.\n" if $V>1;
+exit $exitstat;
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #

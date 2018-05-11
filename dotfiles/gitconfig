@@ -1,0 +1,36 @@
+[user]
+	name = Scott K Punshon
+	email = scott.punshon@gmail.com
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore
+[format]
+	graph = true
+[alias]
+	cl = clone
+	co = checkout
+	ci = commit
+	ca = commit --all
+	l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	remotes = remote -v
+	root = rev-parse --show-toplevel
+	amend = commit --amend
+	discard = checkout -- .
+	delete-branch = "!sh -c 'git push origin :refs/heads/$1 && git branch -D $1' -"
+	merge-branch = "!git checkout master && git merge @{-1}"
+#[push]
+#	default = simple
+[merge]
+	conflictstyle = diff3
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[color "branch"]
+	current = yellow reverse
+	local = green
+	remote = magenta
+[include]
+	path = .gitconfig.local

@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+#
+# Scott K Punshon
+#
+# based off numerous other similar scripts/functions
+#
+
+# Extract archives (based on http://dotfiles.org/~pseup/.bashrc)
+# use:	_extract <file>
+_extract() {
+	if [ -f "$1" ] ; then
+		local filename=$(basename "$1")
+		local foldername="${filename%%.*}"
+		local fullpath=`perl -e 'use Cwd "abs_path";print abs_path(shift)' "$1"`
+		local didfolderexist=false
+		if [ -d "$foldername" ]; then
+			didfolderexist=true
+			read -p "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
+			echo
+			if [[ $REPLY =~ ^[Nn]$ ]]; then
+				return
+			fi
+		fi
+		mkdir -p "$foldername" && cd "$foldername"
+		case $1 in
+			*.tar.bz2)  tar xjf "$fullpath" ;;
+			*.tb2)      tar xjf "$fullpath" ;;
+			*.tbz2)     tar xjf "$fullpath" ;;
+			*.tar.bz)   tar xjf "$fullpath" ;;
+			*.tbz)      tar xjf "$fullpath" ;;
+			*.tar.gz)   tar xzf "$fullpath" ;;
+			*.tgz)      tar xzf "$fullpath" ;;
+			*.tar.Z)    tar xzf "$fullpath" ;;
+			*.taz)      tar xzf "$fullpath" ;;
+			*.tar.xz)   tar Jxf "$fullpath" ;;
+			*.txz)      tar Jxf "$fullpath" ;;
+
+			*.tar)      tar xf "$fullpath" ;;
+			*.bz2)      bunzip2 "$fullpath" ;;
+			*.gz)       gunzip "$fullpath" ;;
+
+			*.pax)      cat "$fullpath" | pax -r ;;
+			*.pax.Z)    uncompress -c "$fullpath" --stdout | pax -r ;;  # uncompress "$fullpath" --stdout | pax -r ;;
+			*.Z)        uncompress "$fullpath" ;;
+			*.xz)       xz --decompress --keep "$fullpath" ;;
+
+			*.7z)       7z e "$fullpath" ;;
+			*.rar)      unrar "$fullpath" ;;
+			            #7z e "$fullpath" ;;
+			*.zip)      tar xf "$fullpath" ;;
+			            #unzip "$fullpath" ;;
+			            #7z e -tzip "$fullpath" ;;
+			#*.exe)      7z e -sfx "$fullpath"
+
+			# Mac PKG package files - `pkgutil --expand sample.pkg /tmp/dest/dir/`
+			*.pkg)      pkgutil --expand "$fullpath" "." ;;
+			# Mac DMG disk image files
+			*.dmg)      hdiutil mount "$fullpath" ;;
+			*)          echo "'$1' cannot be extracted via extract()" && cd .. && ! $didfolderexist && rm -r "$foldername" ;;
+		esac
+	else
+		echo "'$1' is not a valid file"
+	fi
+}
+
+_extract "$@"

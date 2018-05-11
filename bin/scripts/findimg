@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# FindImageFiles [todir] [searchdir]...
+#
+# Hunt down files whose names imply they contain pictures, and link
+# them all into a single directory.
+
+to=$1; shift
+if [ ! -n "$to" ];then to=.;fi
+if [ ! -d "$to" ];then mkdir -p $to;fi
+if [ ! -d "$to" ];then echo "$0: Can't mkdir -p $to"; exit $?;fi
+
+find $* -type f -a \
+	\( -name '*.gif' \
+	-o -name '*.GIF' \
+	-o -name '*.jpg' \
+	-o -name '*.JPG' \
+	-o -name '*.jpeg' \
+	-o -name '*.JPEG' \
+	-o -name '*.xbm' \
+	-o -name '*.XBM' \
+	\) -exec ln {} $to ';'

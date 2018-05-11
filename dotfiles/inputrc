@@ -1,0 +1,26 @@
+# Readline configuration
+#
+# These configuration commands can only go in either /etc/inputrc or ~/.inputrc (i.e. calling from a Bash prompt won't work)
+# To change these values from a prompt (e.g. to put them in ~/.bashrc),
+# the entire command needs to be passed as the first arg to the `bind` command.
+# NOTE: values set using `bind` take precendence over these settings in ~/.inputrc
+# e.g.
+#	bind "set completion-ignore-case on"
+
+# Case insensitive Tab completion (for file names etc)
+set completion-ignore-case on
+
+# This causes symlink-ed directories to complete as 'dir/'
+set mark-symlinked-directories on
+
+# Terminal bell: none, visible or audible
+set bell-style none
+
+
+# Stop delete word (Ctrl-W) on directory delimiter
+# Default 'unix-word-rubout' deletes up to next whitespace.
+# Instead 'unix-filename-rubout' deletes up to next filename boundary (i.e. slash or whitespace)
+# NOTE: need to set bind-tty-special-chars off in order to be allowed to remap Ctrl-W
+set bind-tty-special-chars off
+"\C-w": unix-filename-rubout
+

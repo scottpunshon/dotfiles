@@ -1,0 +1,35 @@
+#!/bin/sh
+###
+# Author: Scott Punshon
+# 
+# Starts a new, isolated instance of Google Chrome with
+# remote debugging enabled.
+###
+DEFAULT_URL='http://localhost:8000'
+DEBUG_PORT=9222
+
+tmpdir="$(mktemp -d -t "$(basename "$0")")"
+if [ $? -ne 0 ]; then
+	echo "$0: Unable to create temporary directory"
+	exit 1
+fi
+
+# Flags to start an isolated instance of Google Chrome, with 
+# remote debugging enabled.
+debug_flags="--no-first-run --no-default-browser-check --user-data-dir=${tmpdir} --remote-debugging-port=${DEBUG_PORT}"
+
+# Additional arguments to pass to the browser
+additional_args="${@:-$DEFAULT_URL}"
+
+# Determine the location of the binary
+if [ "$(uname -s)" = "Darwin" ]; then
+	#chrome='open -a "Google Chrome" --args'
+	chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+else
+	chrome='google-chrome'
+fi
+
+
+# Start debug instance of browser
+"${chrome}" ${debug_flags} ${additional_args}  >/dev/null 2>&1 &
+

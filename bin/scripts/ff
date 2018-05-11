@@ -1,0 +1,9 @@
+#!/bin/bash
+
+f() {
+	local p=$argv[-1]
+	[[ -d $p ]] && { argv[-1]=(); } || p='.'
+	find $p ! -type d | sed 's:^./::' | egrep "${@:-.}"
+}
+
+f $@

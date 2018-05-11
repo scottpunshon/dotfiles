@@ -1,0 +1,3 @@
+#!/bin/sh
+
+lsof -iTCP -sTCP:LISTEN

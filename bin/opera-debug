@@ -1,0 +1,38 @@
+#!/bin/sh
+#!/usr/bin/env bash
+
+# Defaults
+browser="opera"
+default_url='http://localhost:8000'
+debug_port=9222
+
+# Start an isolated instance of Google Chrome, with remote debugging enabled
+tmp_dir=$(mktemp -d -t "$(basename "$0")")
+debugflags="--remote-debugging-port=$debug_port --no-first-run --no-default-browser-check --user-data-dir=${tmp_dir}"
+extraflags="--allow-file-access-from-files --enable-offline-auto-reload --enable-offline-auto-reload-visible-only"
+
+# Process arguments
+for arg; do
+	case "$arg" in
+		--opera)
+			browser="opera" ;;
+		--chrome)
+			browser="google-chrome" ;;
+		--)
+			shift; break ;;
+		*)
+			break ;;
+	esac
+	shift
+done
+
+# Command to open desired browser
+cmd="${browser}"
+
+if [ "$(uname -s)" = "Darwin" ]; then
+	#cmd="open -a '${browser//-/ }' --args"  # not POSIX sh compatible
+	cmd="open -a '$(echo "$browser" | sed -e 's/-/ /g')' --args"
+fi
+
+# Preform action
+eval "$cmd" "$debugflags" "$extraflags" "${@:-$default_url}" >/dev/null 2>&1 &

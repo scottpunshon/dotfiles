@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# Install Homebrew package manager for macOS
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# Enable Homebrew Cask for Apps
+brew tap caskroom/cask
+
+
+### Command Line applications ###
+# Languages
+brew install nasm
+brew install node
+brew install go
+brew install python3
+# Utilities
+brew install ffmpeg --with-openjpeg --with-webp --with-x265 --with-xz --with-tools
+brew install imagemagick --with-ghostscript --with-openjpeg --with-webp
+brew install youtube-dl
+brew install ranger
+# Reverse Engineering
+brew install hexcurse
+brew install radare2
+
+
+### QuickLook Extensions ###
+brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlimagesize webpquicklook suspicious-package qlvideo
+brew cask install betterzip  # Archive QuickLook plugin is now integrated with the BetterZip app (NOTE: might have to open BetterZip for the first time to have the QuickLook plugin automatically enabled)
+
+### Apps ###
+brew cask install iterm2
+# Utilities
+brew cask install clipy  # Clipboard history
+brew cask install caffeine
+# Code Editors
+brew cask install macvim
+brew cask install sublime-text
+brew cask install 0xed
+# Development Tools
+brew cask install sourcetree
+brew cask install wireshark
+# Browsers
+brew cask install opera
+#brew cask install caskroom/versions/opera-developer
+brew cask install google-chrome
+#brew cask install caskroom/versions/google-chrome-canary
+brew cask install firefox
+brew cask install caskroom/versions/firefox-developer-edition
+# Media players
+brew cask install vlc 
+brew cask install mpv
+# Media editors and converters
+brew cask install gimp
+brew cask install inkscape
+brew cask install scribus
+brew cask install adapter
+# Other
+brew cask install virtualbox
+

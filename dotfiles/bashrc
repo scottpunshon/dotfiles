@@ -1,0 +1,42 @@
+# .bashrc
+
+# If not running interactively, don't do anything
+if [ -z "$PS1" ]; then
+	return
+fi
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+
+#
+# Prompt
+#
+if [ -r ~/.bash_prompt ]; then
+	. ~/.bash_prompt
+fi
+
+
+#
+# Settings
+#
+# Turn on parallel history
+shopt -s histappend
+history -a
+# Make bash check its window size after a process completes
+shopt -s checkwinsize
+# Don't attempt command completion when command line is empty
+shopt -s no_empty_cmd_completion
+
+
+#
+# Load shell agnostic components
+#
+for rcfile in aliases functions ; do
+	if [ -r ~/.${rcfile} ]; then
+		. ~/.${rcfile}
+	fi
+done
+

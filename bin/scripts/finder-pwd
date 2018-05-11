@@ -1,0 +1,43 @@
+#!/bin/zsh -f
+# returns the directory path of the frontmost Finder window
+
+thePath="$( osascript<<END
+try
+	tell application "Finder" to set the source_folder to (folder of the front window) as alias
+on error -- no open folder windows
+	set the source_folder to path to desktop folder as alias
+end try
+
+set thePath to (POSIX path of the source_folder as string)
+set result to thePath
+END
+)"
+
+pwd-finder() {
+	local finderPath="$(posd)"
+	if [[ -n "${thePath%/*}" ]]; then
+		if [[ -d "$thePath" ]]; then
+			finderPath="${thePath%/}"
+			#echo "${thePath%/}"
+		else
+			finderPath="${thePath%/*}"
+			#echo "${thePath%/*}"
+		fi
+	else
+		finderPath="/"
+		#echo "/"
+	fi
+	echo "$finderPath"
+}
+
+pwd-finder
+
+# cd to the directory of frontmost Finder window
+alias cd-finder='cd "$(pwd-finder)"'
+
+cd-finder() {
+	cd "$(pwd-finder)"
+	pwd
+}
+
+

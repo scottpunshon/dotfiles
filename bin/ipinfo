@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+invalid_arg() {
+	cat <<EOF
+invalid argument: $1
+EOF
+}
+
+usage() {
+	cat <<EOF
+Usage:	$(basename $0) [-l|--local] [-p|--public|-r|--remote]
+
+Returns a list of IP addresses belonging to the local machine.
+Can either return the local network IP addresses, or the public/remote IP address.
+
+Default is to return the local network IP addresses.
+
+	--local
+	-l			Returns all IP addresses on the local network  associated to this computer.
+
+	--remote
+	-r			Finds the remote/public IP address of this computer.
+
+	--public
+	-p			Alias for --remote
+
+	--hostname
+	-h			Gets the local machine's remote/public hostname.
+
+	--all
+	-a			Output detailed information
+
+Copyright Scott K Punshon, 2015
+EOF
+}
+
+#_bsd_all() {
+#    ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ print $2 }'
+#}
+
+get_all() {
+	#\curl -LsS "ifconfig.me/all.json"
+	command curl -LsS "ipinfo.io"
+}
+
+get_remote_host() {
+	command curl -LsS "ifconfig.me/host"
+}
+
+get_public() {
+	#\curl -LsS "ifconfig.me/ip"
+	#\curl -LsS "ipinfo.io/ip"
+	command curl -LsS "https://api.ipify.org"
+}
+
+get_local() {
+	#if hostname -I >/dev/null 2>&1; then
+	#	hostname -I  # Linux/GNU hostname supports -I flag and prints all local IP addresses!
+	#fi
+	if which ifconfig >/dev/null 2>&1; then
+		#ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'
+		ifconfig | grep 'inet ' | awk '{print $2;}' | grep -v '127.0.0.1'
+	elif which ip >/dev/null 2>&1; then
+		ip addr | grep 'inet ' | awk '{print $2;}' | grep -v '127.0.0.1' | cut -d '/' -f1
+	elif [ "$(uname -s)" = "Darwin" ]; then # OSX
+		/usr/sbin/ipconfig getifaddr en0  # assume first interface? won't work if not connected through first interface...
+	fi
+}
+
+
+# If called with no arguments
+[ -z $1 ] && get_local
+
+# Iterate over arguments
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-l|--local)
+			get_local ;;
+		-p|--public|-r|--remote)
+			get_public ;;
+		-h|--hostname|--host)
+			get_remote_host ;;
+		--help)
+			usage
+			exit $? ;;
+		-*)
+			echo "$(basename $0): unknown flag: $1" ;
+			#usage
+			exit 1 ;;
+		*)
+			echo "$(basename $0): invalid argument: $1"
+			#usage
+			exit 1 ;;
+	esac
+	shift
+done
+
+exit $?

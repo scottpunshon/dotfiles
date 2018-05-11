@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#################################################
+# Copyright Scott K Punshon, 2015
+#
+# cbcopy
+#
+# Get data passed to this script in stdin,
+# either from piping another command's output
+# or from a file stream directed to this script.
+#
+# If the environment variable CBCOPY_CMD has
+# been set, then that command will be used to
+# send the data to the clipboard.
+# Otherwise, the system command to use will
+# be automatically detected.
+#
+# Examples
+#
+#	echo 'new copied text' | cbcopy
+#
+#	cat ./some-files.txt | cbcopy
+#
+#	cbcopy < ~/some.txt
+#################################################
+
+# Mac style pbcopy and pbpaste on linux.
+#command -v xsel 1>/dev/null &&
+#	alias pbcopy='xsel --clipboard --input' &&
+#	alias pbpaste='xsel --clipboard --output'
+
+# Auto-detect system clipboard interface if environment variable CBCOPY_CMD hasn't been set
+if [ -z "$CBCOPY_CMD" ]; then
+	if [ "$(uname -s)" = "Darwin" ]; then
+		CBCOPY_CMD='pbcopy'
+	elif command -v xsel >/dev/null; then
+		CBCOPY_CMD='xsel --clipboard --input -n'
+	elif command -v xclip >/dev/null; then
+		CBCOPY_CMD='xclip -selection clipboard'
+	else
+		echo "$(basename $0): environment variable CBCOPY_CMD needs to be set. (failed to auto-detect)"
+	fi
+fi
+
+# Old Method: this method got rid of trailing newlines by deleting them using `tr`, but this has the undesired side effect of removing *all* newlines within the content, *NOT* just trailing ones!
+#cat | tr -d '\n' | ${CBCOPY_CMD:-echo "$(basename $0): environment variable CBCOPY_CMD needs to be set. (failed to auto-detect)"}
+
+# This method takes advantage of the fact that shell command substitutions remove trailing newline characters,
+# NOTE: if there are muliple _trailing_ newlines, *all* of them are trimmed
+if [ -z "${CBCOPY_CMD}" ]; then
+	echo "$(basename $0): environment variable CBCOPY_CMD needs to be set. (failed to auto-detect)"
+	exit 1
+else	
+	printf %s "$(cat)" | ${CBCOPY_CMD:-echo "$(basename $0): environment variable CBCOPY_CMD needs to be set. (failed to auto-detect)"}
+fi
