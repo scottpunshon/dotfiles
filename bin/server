@@ -18,7 +18,7 @@ response='n'
 echo "Open browser? [yN]"
 read response
 case "$response" in
-	[yY] | [yY][Ee][Ss] )
+	[yY]|[yY][Ee][Ss] )
 		open_browser "http://${ip}:${port}/"
 		;;
 	*)
@@ -29,5 +29,6 @@ command -v php > /dev/null && SERVERCMD="php -S "${ip}:${port}"" || SERVERCMD="p
 SERVERCMD="python -m SimpleHTTPServer"
 #python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port" ;
 
-${SERVERCMD} 2>/dev/null
+#${SERVERCMD} 2>/dev/null
+${SERVERCMD}
 

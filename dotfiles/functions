@@ -24,3 +24,12 @@ if command -v compdef &>/dev/null; then
 	compdef g='git'
 fi
 
+
+#
+# Third party
+#
+# Initialise Fasd, which should be in ~/bin or elsewhere in PATH
+if which fasd >/dev/null 2>&1; then
+	eval "$(fasd --init auto)"
+fi
+

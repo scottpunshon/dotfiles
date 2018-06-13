@@ -1,0 +1,55 @@
+
+
+""""""""""
+" Colour "
+""""""""""
+let g:enable_bold_font = 1
+
+set background=dark
+silent! colorscheme molokai
+
+
+""""""""
+" Font "
+""""""""
+silent! set antialias
+
+set linespace=1  " add some line space for easy reading
+
+if has('mac') || has('macunix')
+	silent! set guifont=Source\ Code\ Pro\ Light:h12
+else
+	"silent! set guifont=Meslo\ 10 linespace=0
+	silent! set guifont=Source\ Code\ Pro\ Light\ 11 linespace=0
+endif
+
+
+"""""""
+" GUI "
+"""""""
+set novisualbell
+
+"set columns=120  " comment out to preserve width
+"set lines=99     " maximise vertically
+if &lines > 40
+	set cmdheight=2
+endif
+
+set guioptions-=T
+set guioptions-=r
+set guioptions-=R
+set guioptions-=l
+set guioptions-=L
+set guioptions-=b
+set guioptions+=c
+set guioptions-=m  " hide the GUI menu
+set guioptions-=e  " use vim's normal/terminal tab pages (i.e. don't use GUI tab pages)
+if has('gui_macvim')
+	set guioptions+=e  " do use the GUI tabs
+	set guioptions+=m  " do show the GUI menu
+endif
+
+if has('gui_macvim')
+	silent! set transparency=5
+endif
+

@@ -1,7 +1,21 @@
 set nocompatible
 
+"
+" Plugins
+"
+" To Install: from the command line run:
+"	vim +PlugClean +PlugInstall +qall
+"
+let s:bundles_config='~/.vim/plugins.vim'
+if filereadable(expand(s:bundles_config))
+	execute 'silent! source ' . expand(s:bundles_config)
+endif
+
+
 set background=dark
 "silent! colorscheme desert
+"silent! colorscheme molokai
+silent! colorscheme hybrid_material
 
 highlight LineNr ctermfg=darkgray guifg=darkgrey
 highlight Comment gui=italic
@@ -18,6 +32,7 @@ filetype plugin indent on
 set number
 set modeline
 set modelines=5
+set laststatus=2  " needed for enabling status line (e.g. for LightLine plugin)
 
 set tabstop=4
 set shiftwidth=4
@@ -45,7 +60,7 @@ endif
 
 set nrformats-=octal  " make <C-a> and <C-x> play well with zero-padded numbers (i.e. don't consider them octal or hex)
 
-set showmode
+set noshowmode  " not needed when using LightLine plugin
 set nostartofline	" Don't jump to start of line when scrolling
 set showtabline=2
 set switchbuf=useopen,usetab,newtab
@@ -192,8 +207,19 @@ xnoremap < <gv
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<CR>:pwd<CR>
 
-" Remap Vim 0 to first non-blank character
-map 0 ^
+" Remap <Home> key, as well as Vim's 0 command, to toggle between first non-blank character and actual start of line
+nnoremap 0 :call Home()<CR>
+nnoremap <silent> <Home> :call Home()<CR>
+inoremap <silent> <Home> <C-o>:call Home()<CR>
+
+function! Home()
+	let l:curcol = wincol()
+	normal! ^
+	let l:newcol = wincol()
+	if l:newcol == l:curcol
+		normal! 0
+	endif
+endfunction
 
 " Make `Y` work from the cursor to the end of line (which is more consistand
 " with C and D)
@@ -299,6 +325,7 @@ function! CurrentHighlight()
 		return '[' . name . ']'
 	endif
 endfunction
+command! CurrentHighlight echo CurrentHighlight()
 
 
 " Auto-chmod script files to set their permissions to be executable
@@ -377,8 +404,11 @@ nnoremap <silent> <leader>N :NERDTreeFind<CR>
 nmap <F8> :NERDTreeToggle<CR>
 
 " TagBar
-let tagbar_width=30
 nnoremap <silent> <leader>m :TagbarToggle<CR>
 nmap <F9> :TagbarToggle<CR>
 
+
+"
+" GUI
+"
 

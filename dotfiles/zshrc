@@ -29,6 +29,8 @@ setopt ZLE
 setopt IGNORE_EOF
 # 10 sec wait if you do something that will delete everything
 setopt RM_STAR_WAIT
+# Don't save commands that start with a space to history
+setopt histignorespace
 # Append instead of overwrite history
 setopt APPEND_HISTORY
 # Share history between multiple shells
@@ -40,7 +42,7 @@ setopt HIST_IGNORE_ALL_DUPS
 # If a line starts with a space, don't save it.
 setopt HIST_IGNORE_SPACE
 setopt HIST_NO_STORE
-# Remove superfluous blanks from each command line being added to the history 
+# Remove superfluous blanks from each command line being added to the history
 setopt HIST_REDUCE_BLANKS
 # Save the time and how long a command ran
 setopt EXTENDED_HISTORY
@@ -48,6 +50,7 @@ setopt EXTENDED_HISTORY
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
+
 
 #
 # Key Bindings
@@ -70,7 +73,7 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 
 #
 # Load shell agnostic components
 #
-for rcfile in aliases functions ; do
+for rcfile in path exports aliases functions ; do
 	if [ -r ~/.${rcfile} ]; then
 		. ~/.${rcfile}
 	fi

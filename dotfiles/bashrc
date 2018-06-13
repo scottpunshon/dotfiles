@@ -30,11 +30,14 @@ shopt -s checkwinsize
 # Don't attempt command completion when command line is empty
 shopt -s no_empty_cmd_completion
 
+# Don't save commands that start with a space to history
+export HISTCONTROL='ignorespace'
+
 
 #
 # Load shell agnostic components
 #
-for rcfile in aliases functions ; do
+for rcfile in path exports aliases functions ; do
 	if [ -r ~/.${rcfile} ]; then
 		. ~/.${rcfile}
 	fi

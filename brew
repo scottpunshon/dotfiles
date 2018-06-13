@@ -1,7 +1,28 @@
 #!/bin/sh
 
-# Install Homebrew package manager for macOS
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+if [ "$(uname -s)" = 'Darwin' ]; then
+	# Homebrew package manager for macOS - https://brew.sh/
+	# Install Homebrew for macOS
+	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+elif [ "$(uname -s)" = 'Linux' ]; then
+	# Homebrew for Linux - http://linuxbrew.sh/
+	# Dependencies
+	#  Ubuntu, Debian
+	#	sudo apt-get install build-essential curl file git
+	#  CentOS, RedHat
+	#	sudo yum groupinstall 'Development Tools' && sudo yum install curl file git
+	#  Fedora
+	#	sudo dnf groupinstall 'Development Tools' && sudo dnf install curl file git
+
+	# Install Homebrew for Linux
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+	# TODO: then need to add the following to shell profile
+	#	test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
+	#	test -d /home/linuxbrew/.linuxbrew && PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+	#	test -r ~/.bash_profile && echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.bash_profile
+	#	echo "export PATH='$(brew --prefix)/bin:$(brew --prefix)/sbin'":'"$PATH"' >>~/.profile
+fi
 
 # Enable Homebrew Cask for Apps
 brew tap caskroom/cask
@@ -14,10 +35,17 @@ brew install node
 brew install go
 brew install python3
 # Utilities
+brew install ctags  # some things don't work with BSD ctags
 brew install ffmpeg --with-openjpeg --with-webp --with-x265 --with-xz --with-tools
+brew install libav  # doing a `brew reinstall libav` can sometimes fix some issues with `youtube-dl` to do with merging, or otherwise running `youtube-dl --prefer-ffmpeg`.
 brew install imagemagick --with-ghostscript --with-openjpeg --with-webp
+brew install p7zip
+brew install unrar
+brew install nmap
 brew install youtube-dl
 brew install ranger
+brew install elinks --devel  # install version 0.12pre6
+brew install the_silver_searcher
 # Reverse Engineering
 brew install hexcurse
 brew install radare2
@@ -30,14 +58,16 @@ brew cask install betterzip  # Archive QuickLook plugin is now integrated with t
 ### Apps ###
 brew cask install iterm2
 # Utilities
-brew cask install clipy  # Clipboard history
-brew cask install caffeine
+brew cask install clipy      # Clipboard history
+brew cask install caffeine   # When activated, stop computer from going to sleep
+brew cask install postman    #
 # Code Editors
 brew cask install macvim
 brew cask install sublime-text
 brew cask install 0xed
 # Development Tools
 brew cask install sourcetree
+brew cask install meld
 brew cask install wireshark
 # Browsers
 brew cask install opera
@@ -47,7 +77,7 @@ brew cask install google-chrome
 brew cask install firefox
 brew cask install caskroom/versions/firefox-developer-edition
 # Media players
-brew cask install vlc 
+brew cask install vlc
 brew cask install mpv
 # Media editors and converters
 brew cask install gimp
@@ -55,5 +85,10 @@ brew cask install inkscape
 brew cask install scribus
 brew cask install adapter
 # Other
-brew cask install virtualbox
+brew cask install virtualbox virtualbox-extension-pack
+brew cask install tunnelblick
+brew cask install transmission
+# Database Utilities
+brew cask install mysqlworkbench
+brew cask install db-browser-for-sqlite
 

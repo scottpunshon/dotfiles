@@ -1,0 +1,7 @@
+# vim:ft=sh
+
+#
+# GoLang
+#
+# Default package installation path is ~/go and we don't want that polluting home directory
+export GOPATH="${HOME}/.go"

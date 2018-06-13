@@ -1,7 +1,7 @@
 # Pure
-# by Sindre Sorhus
-# https://github.com/sindresorhus/pure
-# MIT License
+# by Sindre Sorhus (https://github.com/sindresorhus/pure). MIT License.
+#
+# Modified by: Scott Punshon
 
 # For my own and others sanity
 # git:
@@ -124,6 +124,10 @@ prompt_pure_preprompt_render() {
 	# Initialize the preprompt array.
 	local -a preprompt_parts
 
+	# Username and machine, if applicable.
+	# Make this appear before the path.
+	[[ -n $prompt_pure_state[username] ]] && preprompt_parts+=('${prompt_pure_state[username]}')
+
 	# Set the path.
 	preprompt_parts+=('%F{blue}%~%f')
 
@@ -137,8 +141,6 @@ prompt_pure_preprompt_render() {
 		preprompt_parts+=('%F{cyan}${prompt_pure_git_arrows}%f')
 	fi
 
-	# Username and machine, if applicable.
-	[[ -n $prompt_pure_state[username] ]] && preprompt_parts+=('${prompt_pure_state[username]}')
 	# Execution time.
 	[[ -n $prompt_pure_cmd_exec_time ]] && preprompt_parts+=('%F{yellow}${prompt_pure_cmd_exec_time}%f')
 
@@ -494,6 +496,8 @@ prompt_pure_state_setup() {
 		fi
 	fi
 
+	# always show username
+	username='%F{green}%n%f'
 	# show username@host if logged in through SSH
 	[[ -n $ssh_connection ]] && username='%F{242}%n@%m%f'
 
