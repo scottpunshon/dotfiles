@@ -1,0 +1,40 @@
+####################################
+####################################
+####################################
+###                              ###
+###  CUSTOM SETTINGS (vlc 2.2.1) ###
+###                              ###
+####################################
+####################################
+####################################
+
+[core]
+
+loop=1
+
+#key-quit=q
+key-vol-up=0
+key-vol-down=9
+#key-next=Shift->
+#key-prev=Shift-<
+key-next=.
+key-prev=,
+
+key-jump-extrashort=Shift-Left
+key-jump+extrashort=Shift-Right
+#global-key-jump-short=Shift-Space
+key-jump-short=Left
+key-jump+short=Right
+key-jump-medium=Down
+key-jump+medium=Up
+key-jump-long=Shift+Down
+key-jump+long=Shift+Up
+
+extrashort-jump-size=2
+short-jump-size=5
+medium-jump-size=15
+long-jump-size=80
+
+####################################
+####################################
+####################################
