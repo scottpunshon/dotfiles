@@ -39,5 +39,5 @@ command -v hd >/dev/null || alias hd="hexdump -C"
 
 # Custom Utilities
 # Youtube-DL
-alias youtube-dl='youtube-dl --prefer-ffmpeg'
+#alias youtube-dl='youtube-dl --prefer-ffmpeg'
 

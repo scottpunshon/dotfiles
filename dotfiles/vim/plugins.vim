@@ -7,6 +7,10 @@
 silent! if plug#begin('~/.vim/bundle')
 
 
+" Syntax Highlighting
+Plug 'digitaltoad/vim-pug'
+
+
 " Editing
 Plug 'editorconfig/editorconfig-vim'
 Plug 'scrooloose/nerdcommenter'
@@ -18,6 +22,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'easymotion/vim-easymotion'
 Plug 'itchyny/lightline.vim'
 
+
 " Multi-Cursor
 Plug 'terryma/vim-multiple-cursors'
 let g:multi_cursor_use_default_mapping=0
@@ -26,6 +31,7 @@ let g:multi_cursor_next_key='<C-m>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
+
 
 " NERDTree
 let g:NERDTreeMouseMode = 2
@@ -38,6 +44,7 @@ else
 	"Plug 'scrooloose/nerdtree'
 endif
 
+
 " TagBar
 if v:version >= 703
 	Plug 'majutsushi/tagbar'
@@ -45,6 +52,7 @@ if v:version >= 703
 endif
 let g:tagbar_autofocus = 1
 let g:tagbar_width=30
+
 
 " Colours
 Plug 'tomasr/molokai'

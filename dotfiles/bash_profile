@@ -1,7 +1,9 @@
 # .bash_profile
 
+# Bash only reads .bashrc for a shell that is *both* interactive AND non-login,
+# so point .bash_profile to read .bashrc to cover all cases.
 # macOS's Bash only sources .bashrc for a login shell, and instead sources .bash_profile for all new terminals.
-if [ -f ~/.bashrc ]; then
+if [ -r ~/.bashrc ]; then
 	. ~/.bashrc
 fi
 

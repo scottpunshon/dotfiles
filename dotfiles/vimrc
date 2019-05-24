@@ -122,6 +122,10 @@ set esckeys		" Allow cursor keys in insert mode
 set ttyfast		" Optimize for fast terminal connections
 set lazyredraw	" Don't redraw while executing macros (good performance config)
 
+" Get rid of delays when exiting Insert Mode
+set ttimeoutlen=10
+set timeoutlen=1000
+
 
 """"""""""""""""
 " Key Mappings "

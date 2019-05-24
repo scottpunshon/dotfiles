@@ -7,7 +7,7 @@ charset = utf-8
 end_of_line = lf
 indent_style = tab
 indent_size = 4
-insert_final_newline = false
+insert_final_newline = true
 trim_trailing_whitespace = true
 # Give operators breathing room, but not brackets
 spaces_around_operators = true
@@ -26,13 +26,14 @@ indent_size = 2
 # Markdown
 [*.{md,markdown,mdown}]
 trim_trailing_whitespace = false
+insert_final_newline = false
+indent_style = space
 indent_size = 2
 max_line_length = 100
 
 # JSON
 [*.json]
 indent_size = 2
-indent_style = space
 
 # JavaScript
 [*.js]

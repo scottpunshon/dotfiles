@@ -1,0 +1,9 @@
+{
+	"workbench.colorTheme": "Monokai Classic",
+	"breadcrumbs.enabled": true,
+	"editor.insertSpaces": false,
+	"editor.colorDecorators": true,
+	"editor.dragAndDrop": false,
+	"editor.emptySelectionClipboard": true,
+	"go.formatTool": "gofmt",
+}
